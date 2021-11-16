@@ -1,4 +1,10 @@
 version: 2
+job:
+  build:
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      JVM_OPTS: -Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 org.gradle.parallel=true 
 
 references:
 
