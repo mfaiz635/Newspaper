@@ -9,18 +9,31 @@ job:
 references:
 
   ## Cache
-
-  cache_key: &cache_key
-    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
-  restore_cache: &restore_cache
-    restore_cache:
-      <<: *cache_key
-  save_cache: &save_cache
-    save_cache:
-      <<: *cache_key
+  - checkout:
+  - restore_cache:
+      key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+  - run:
+      name: chmod permissions
+      command: chmod +x . gradlew
+  - run:
+      name: Download Dependencies
+      command: ./gradlew androidDependencies
+  - save_cache:
       paths:
-        - ~/.gradle
-        - ~/.m2
+        - ~/.gradlew
+      key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+      
+#  cache_key: &cache_key
+#    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
+#  restore_cache: &restore_cache
+#    restore_cache:
+#      <<: *cache_key
+#  save_cache: &save_cache
+#    save_cache:
+#      <<: *cache_key
+#      paths:
+#        - ~/.gradle
+#        - ~/.m2
 
   ## Workspace
 
